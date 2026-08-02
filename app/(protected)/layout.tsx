@@ -1,21 +1,25 @@
-import { auth } from "@/lib/better-auth/auth";
 import { getSessionServer } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { MeshBackground } from "../DynamicMeshBackground";
 
 export default async function ProtectedLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-
     const session = await getSessionServer();
 
 
-
-
-    if (!session || session.user.isAnonymous) {
+    if (session?.user.isAnonymous) {
         redirect("/register");
     }
 
-    return <>{children}</>;
+    if (!session) {
+        redirect("/login");
+    }
+    return <MeshBackground>
+        <div className='relative flex min-h-screen flex-col w-full'>
+            {children}
+        </div>
+    </MeshBackground>;
 }

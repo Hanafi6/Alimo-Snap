@@ -1,26 +1,46 @@
-import { useState } from "react";
-import { type UseFormReturn } from "react-hook-form";
-import { LoginSchema } from "@/features/auth/schemas";
-import { type QuickProfile } from "@/lib/types";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/better-auth/auth-client';
 
-export function useQuickLogin(form: UseFormReturn<LoginSchema>) {
-    const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
-        null,
-    );
-    const [submitError, setSubmitError] = useState<string | null>(null);
-
-    const handleQuickLogin = (profile: QuickProfile) => {
-        setSubmitError(null);
-        setSelectedProfileId(profile.id);
-        form.setValue("email", profile.email, { shouldValidate: true });
-        form.setValue("password", profile.password, { shouldValidate: true });
-    };
-
-    return {
-        selectedProfileId,
-        submitError,
-        setSelectedProfileId,
-        setSubmitError,
-        handleQuickLogin,
-    };
+interface UseLogoutReturn {
+    handleLogout: () => Promise<void>;
+    isLoading: boolean;
+    error: string | null;
 }
+
+export const useLogout = (): UseLogoutReturn => {
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter();
+
+    const handleLogout = async (): Promise<void> => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            await authClient.signOut(
+                {
+                    fetchOptions: {
+                        onSuccess: ({ data }) => {
+                            console.log(data)
+                            window.location.href = '/login';
+                        }
+                    }
+                }
+            );
+            router.replace("/login");
+            router.refresh();
+        } catch (err: unknown) {
+            console.error(err);
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return { handleLogout, isLoading, error };
+};

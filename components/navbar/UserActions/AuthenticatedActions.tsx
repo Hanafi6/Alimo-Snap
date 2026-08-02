@@ -7,8 +7,6 @@ import Taps from "../component/Taps";
 export const links = [
     { title: "Home", href: "/" },
     { title: "Products", href: "/products" },
-    { title: "Profile", href: "/profile" },
-    { title: "Settings", href: "/settings" },
 ];
 
 interface Props {
@@ -27,7 +25,7 @@ export default function TapsMeneu({
 
     return (
         <div className={cn("hidden md:flex items-center gap-6", className)}>
-            <Taps links={links} isPending={isPending} />
+            <Taps className="" links={links} isPending={isPending} />
         </div>
     );
 }

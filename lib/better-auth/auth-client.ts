@@ -19,13 +19,13 @@ export const authClient = createAuthClient({
                 maxAttempts: 5, // Maximum number of attempts before triggering onPromptNotification (default: 5)
             },
         }),
+
         adminClient({
             ac,
-            // roles: { admin, head, sales, agent },
+            roles: { admin, head, sales, agent },
         }),
         anonymousClient(),
         emailOTPClient(),
-
     ],
 });
 

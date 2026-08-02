@@ -1,157 +1,92 @@
 "use client";
 
-import { ReactNode } from "react";
-import { authClient } from "@/lib/better-auth/auth-client";
+import { useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { type SessionData } from "../NavBarClient";
-import { LogOut } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { ButtonAuth as Button } from "./buttonAuth";
+import { useLogout } from "@/features/auth/hooks/useQuickLogin";
 
-interface LogoutButtonProps {
+interface ButtonsAuthProps {
     className?: string;
     session: SessionData | null;
     isPending: boolean;
 }
 
-interface ButtonProps {
-    className?: string;
-    content: ReactNode;
-    onClick?: () => void;
-    disabled?: boolean;
-}
+const SkeletonButton = ({ width = "w-24" }: { width?: string }) => (
+    <div className={`h-9 ${width} rounded-md bg-muted animate-pulse`} />
+);
 
-const Button = ({
-    className,
-    content,
-    onClick,
-    disabled = false,
-}: ButtonProps) => {
-    return (
-        <button
-            onClick={onClick}
-            disabled={disabled}
-            className={`
-        h-9
-        px-3
-        rounded-md
-        border
-        bg-card
-        text-sm
-        font-medium
-        transition-all
-        duration-200
-        hover:bg-accent
-        hover:text-white
-        disabled:cursor-not-allowed
-        ${className ?? ""}
-      `}
-        >
-            {content}
-        </button>
-    );
-};
-
-const SkeletonButton = ({
-    width = "w-20",
-}: {
-    width?: string;
-}) => {
-    return (
-        <div
-            className={`
-        h-9
-        ${width}
-        rounded-md
-        bg-muted
-        animate-pulse
-      `}
-        />
-    );
-};
-
-const SkeletonIcon = () => {
-    return (
-        <div className="h-9 w-9 rounded-md bg-muted animate-pulse" />
-    );
-};
-
-export default function ButtomsAuth({
+export default function ButtonsAuth({
     className,
     session,
     isPending,
-}: LogoutButtonProps) {
+}: ButtonsAuthProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const [routrPindeing, startTransition] = useTransition();
+    const { handleLogout, isLoading: isLogoutLoading } = useLogout();
+
+
 
     const isRegisterPage = pathname === "/register";
 
-    const isLoginPage = pathname === "/login";
-
-    const handleLogout = async () => {
-        try {
-            await authClient.signOut();
-
-            router.push("/login");
-            router.refresh();
-        } catch (error) {
-            console.error(error);
-        }
+    const Navigate = (path: string, router: AppRouterInstance) => {
+        startTransition(() => {
+            router.push(path);
+        });
     };
 
-    // ===== Loading Skeleton =====
+    // 1. ===== Loading State =====
     if (isPending) {
+        if (session && !session.user?.isAnonymous) return null;
+
         return (
             <div className={`flex items-center gap-2 ${className ?? ""}`}>
-                {session ? (
-                    <SkeletonIcon />
-                ) : (
+                {!isRegisterPage && <SkeletonButton width="w-28" />}
+            </div>
+        );
+    }
+
+    if (session && !session.user?.isAnonymous) {
+        return null;
+    }
+
+    if (session?.user?.isAnonymous) {
+        return (
+            <div className={`flex items-center gap-2 ${className ?? ""}`}>
+                {!isRegisterPage && (
                     <>
-                        {!isLoginPage && <SkeletonButton width="w-16" />}
-                        {!isRegisterPage && <SkeletonButton width="w-24" />}
+                        <Button
+                            content="Complete Registration"
+                            onClick={() => router.replace("/register")}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 border-transparent"
+                        />
+                        <Button
+                            content="LogOut"
+                            disabled={isLogoutLoading}
+                            onClick={() => {
+                                handleLogout()
+                            }}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 border-transparent"
+                        />
                     </>
                 )}
             </div>
         );
     }
 
-    // ===== User Logged In =====
-    if (session && session?.user?.isAnonymous) {
-        return (
-            <>
-                {!isRegisterPage && (
-                    <Button
-                        content="Complete Registration"
-                        onClick={() => router.push("/register")}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 border-transparent"
-                    />)}
-                <Button
-                    content={<LogOut className="h-4 w-4" />}
-                    onClick={handleLogout}
-                    className="hover:bg-destructive hover:text-destructive-foreground"
-                />
-            </>
-        );
-    }
-    // ===== Guest =====
-
-    if (session) {
-        return (
-            <Button
-                content={<LogOut className="h-4 w-4" />}
-                onClick={handleLogout}
-                className="hover:bg-destructive hover:text-destructive-foreground"
-            />
-        );
-    }
     return (
         <div className={`flex items-center gap-2 ${className ?? ""}`}>
             {!isRegisterPage && (
                 <Button
                     content="Register"
-                    onClick={() => router.push("/register")}
+                    disabled={routrPindeing}
+                    isloding={routrPindeing}
+                    onClick={() => Navigate("/register", router)}
                     className="bg-primary text-primary-foreground hover:bg-primary/90 border-transparent"
                 />
             )}
-
         </div>
     );
 }

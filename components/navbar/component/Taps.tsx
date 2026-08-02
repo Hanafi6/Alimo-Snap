@@ -35,9 +35,9 @@ function Taps({ links, isPending, className }: TapsProps) {
                             key={link.href}
                             href={link.href}
 
-                            className={`${isActive && 'text-background underline font-semibold'}
+                            className={cn(`${isActive && 'text-background underline font-semibold'}
                         text-sm font-medium text-card-foreground border-primary hover:border-2 duration-600 rounded-md px-3 py-1
-                        transition-colors`}
+                        transition-colors`, className)}
                         >
                             {link.title}
                         </Link>

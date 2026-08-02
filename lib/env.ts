@@ -9,6 +9,8 @@ export const env = createEnv({
         GITHUB_SECRET: z.string().optional(),
         RESEND_API_KEY: z.string().min(32).max(128),
         EMAIL_FROM: z.string().min(16),
+        GMAIL_USER: z.string().email().optional(),
+        GMAIL_APP_PASSWORD: z.string().optional(),
     },
 
     client: {
@@ -19,8 +21,8 @@ export const env = createEnv({
     },
 
     experimental__runtimeEnv: {
-        NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL, // 👈 وهنا
+        NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
         NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        NEXT_PUBLIC_GITHUB_ID: process.env.NEXT_PUBLIC_GITHUB_ID, //  الصح
+        NEXT_PUBLIC_GITHUB_ID: process.env.NEXT_PUBLIC_GITHUB_ID,
     },
 });

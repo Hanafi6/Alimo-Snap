@@ -1,6 +1,6 @@
-import { NavBarClientProps } from '../NavBarClient'
+import { SessionData } from '../NavBarClient'
 
-function UserMenu({ session }: { session: NavBarClientProps["session"] }) {
+function UserMenu({ session }: { session: SessionData["session"] }) {
     return (
         <div>UserMenu</div>
     )

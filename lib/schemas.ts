@@ -33,5 +33,33 @@ export const registerSchema = z
     path: ["passwordConfirm"],
   });
 
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "The password must be more than 8 characters long.")
+      .max(100, "The password is very long"),
+    confirmPassword: z.string().min(1, "Pls Confirm Pass Key"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Pass Key Is Not Same Word",
+    path: ["confirmPassword"],
+  });
+
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "كلمة السر الحالية مطلوبة"),
+    newPassword: z.string().min(8, "لازم تكون 8 حروف على الأقل"),
+    confirmPassword: z.string().min(1, "تأكيد كلمة السر مطلوب"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "كلمتا السر الجديدة غير متطابقتين",
+    path: ["confirmPassword"],
+  });
+
+
+export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type RegisterSchema = z.infer<typeof registerSchema>;
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;

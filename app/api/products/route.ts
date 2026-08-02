@@ -1,16 +1,43 @@
 import { auth } from "@/lib/better-auth/auth";
+import { checkServerRoles } from "@/lib/better-auth/checkServerRoles";
+import { handleErrorResponse, handleSuccessResponse } from "@/lib/better-auth/handleResponse";
+import { isAuthenticated } from "@/lib/better-auth/isAuthenticated";
 import { prisma } from "@/lib/prisma";
+import { getPrroducts } from "@/lib/products/getProducts";
 import { NextResponse } from "next/server";
 
 // GET /api/products
 export async function GET() {
-    const products = await prisma.product.findMany({
-        orderBy: {
-            createdAt: "desc",
-        },
-    });
+    const session = await isAuthenticated()
 
-    return NextResponse.json(products);
+    if (!(session) && false /*FOR TESTING*/)
+        return handleErrorResponse({ statusCode: 401, message: 'You have no access to companies, please log' });
+
+    if (session) {
+        const hasPermission = await checkServerRoles({
+            userId: session?.user?.id || "",
+            permissions: { company: ["read"] },
+        });
+
+        if (!hasPermission && false /*FOR TESTING*/) {
+            return handleErrorResponse({
+                statusCode: 403,
+                message: "Forbidden: You don't have permission to view companies",
+            });
+        }
+    }
+
+    const product = await getPrroducts()
+
+    return product
+        ? handleSuccessResponse({
+            statusCode: 200,
+            data: product,
+        })
+        : handleErrorResponse({
+            statusCode: 404,
+            message: "There is no company with this ID",
+        });
 }
 
 // POST /api/products

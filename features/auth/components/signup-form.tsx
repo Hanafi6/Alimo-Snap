@@ -16,6 +16,7 @@ import { registerSchema, RegisterSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
+import BackToHomBtn from '@/components/back-to-home-btn'
 
 
 type Success<T> = {
@@ -109,7 +110,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
       const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
         email: data.email,
-        type: "email-verification", // ينادي دالة sendVerificationOTP في auth.ts
+        type: "email-verification",
       });
 
       if (otpError) {
@@ -130,6 +131,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
+        <BackToHomBtn />
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Enter your information below to create your account

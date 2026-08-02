@@ -5,7 +5,7 @@ import { getSessionServer } from "@/lib/session";
 async function page() {
 
     const session = await getSessionServer();
-    return <ForgetPassword session={session} />
+    return <ForgetPassword />
 }
 
 export default page

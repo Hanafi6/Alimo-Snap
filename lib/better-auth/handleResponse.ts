@@ -1,44 +1,37 @@
-type HandleSuccessResponse = {
-  statusCode: number;
-  message?: string;
-  data?: Record<string, unknown> | Record<string, unknown>[];
-};
+// lib/api-response.ts
+import {
+  ApiResponseSuccess,
+  ApiResponseError,
+  HandleSuccessResponseInput,
+  HandleErrorResponseInput,
+} from "@/lib/types";
 
-type HandleErrorResponse = {
-  statusCode: number;
-  message: string;
-  details?: Record<string, unknown> | null;
-};
-
-export function handleSuccessResponse({
-  statusCode,
+export function handleSuccessResponse<T>({
+  statusCode = 200,
   message,
   data,
-}: HandleSuccessResponse) {
-  return Response.json(
-    {
-      statusCode,
-      status: "success",
+}: HandleSuccessResponseInput<T>) {
+  const responsePayload: ApiResponseSuccess<T> = {
+    statusCode,
+    status: "success",
+    ...(message && { message }),
+    data,
+  };
 
-      ...(message ? { message } : {}),
-      ...(data && { data }),
-    },
-    { status: statusCode },
-  );
+  return Response.json(responsePayload, { status: statusCode });
 }
 
 export function handleErrorResponse({
   statusCode,
   message,
   details,
-}: HandleErrorResponse) {
-  return Response.json(
-    {
-      statusCode,
-      message,
-      status: statusCode < 500 ? "fail" : "error",
-      ...(details && { details }),
-    },
-    { status: statusCode },
-  );
+}: HandleErrorResponseInput) {
+  const responsePayload: ApiResponseError = {
+    statusCode,
+    message,
+    status: statusCode < 500 ? "fail" : "error",
+    ...(details && { details }),
+  };
+
+  return Response.json(responsePayload, { status: statusCode });
 }

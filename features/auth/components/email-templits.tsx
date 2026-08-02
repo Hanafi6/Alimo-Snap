@@ -15,7 +15,7 @@ import {
 } from "react-email";
 
 export interface AuthEmailProps {
-    type: "change-email" | "email-verification" | "forget-password" | "sign-in";
+    type: "change-email" | "email-verification" | "forget-password" | "sign-in" | "reset-password" | "newsletter";
     otp?: string;
     url?: string;
     newEmail?: string;
@@ -25,6 +25,7 @@ export default function AuthEmail({ otp, url, type, newEmail }: AuthEmailProps) 
     const isForgetPassword = type === "forget-password";
     const isEmailVerification = type === "email-verification";
     const isChangeEmail = type === "change-email";
+    const isNewsletter = type === "newsletter";
 
     let title = "Verify your identity";
     let subtitle = "One-Time Password (OTP) for sign-in";
@@ -50,6 +51,12 @@ export default function AuthEmail({ otp, url, type, newEmail }: AuthEmailProps) 
         introText = `You have requested to change your email address to ${newEmail || ""}. Please click the button below to verify your new email address:`;
         warningText = "If you did not request an email change, please contact support immediately.";
         previewText = "Verify your new Alimo email address";
+    } else if (isNewsletter) {
+        title = "Welcome to AlimoSnap Newsletter! 🎉";
+        subtitle = "Thank you for subscribing";
+        introText = "You're all set! You’ll now be the first to hear about our latest tech gadgets, workspace setups, and exclusive deals.";
+        warningText = "If you didn't subscribe to our newsletter, you can safely ignore or unsubscribe at any time.";
+        previewText = "Welcome to the AlimoSnap Newsletter!";
     }
 
     return (
@@ -64,7 +71,7 @@ export default function AuthEmail({ otp, url, type, newEmail }: AuthEmailProps) 
                     <Section style={styles.header}>
                         <Row>
                             <Column width={40}>
-                                <Text style={styles.logo}>C</Text>
+                                <Text style={styles.logo}>A</Text>
                             </Column>
 
                             <Column style={{ paddingLeft: 12 }}>
@@ -95,30 +102,34 @@ export default function AuthEmail({ otp, url, type, newEmail }: AuthEmailProps) 
                             </Section>
                         )}
 
-                        {/* Verification Link Button */}
-                        {url && (
+                        {/* Button Link (or Newsletter Explore Button) */}
+                        {(url || isNewsletter) && (
                             <Section style={styles.buttonContainer}>
-                                <Link href={url} style={styles.button}>
-                                    Verify Email Address
+                                <Link href={url || "http://localhost:3000/products"} style={styles.button}>
+                                    {isNewsletter ? "Explore Products" : "Verify Email Address"}
                                 </Link>
-                                <Text style={styles.urlText}>
-                                    Or copy and paste this link in your browser:
-                                    <br />
-                                    <Link href={url} style={styles.linkFallback}>
-                                        {url}
-                                    </Link>
-                                </Text>
+                                {url && (
+                                    <Text style={styles.urlText}>
+                                        Or copy and paste this link in your browser:
+                                        <br />
+                                        <Link href={url} style={styles.linkFallback}>
+                                            {url}
+                                        </Link>
+                                    </Text>
+                                )}
                             </Section>
                         )}
 
                         <Hr style={styles.hr} />
 
-                        <Text style={styles.securityTitle}>Security Notice</Text>
+                        {!isNewsletter && <Text style={styles.securityTitle}>Security Notice</Text>}
 
-                        <Text style={styles.paragraph}>
-                            For your security, never share this code or link with anyone. Alimo
-                            staff will never ask for them.
-                        </Text>
+                        {!isNewsletter && (
+                            <Text style={styles.paragraph}>
+                                For your security, never share this code or link with anyone. Alimo
+                                staff will never ask for them.
+                            </Text>
+                        )}
 
                         <Text style={styles.paragraph}>{warningText}</Text>
                     </Section>
@@ -130,7 +141,7 @@ export default function AuthEmail({ otp, url, type, newEmail }: AuthEmailProps) 
                         <Text style={styles.footerSubtitle}>Secure Workspace Portal</Text>
 
                         <Text style={styles.footerText}>
-                            This is an automated security transmission.
+                            This is an automated transmission.
                             <br />
                             Replies to this email are not monitored.
                         </Text>

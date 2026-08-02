@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import TanstackProvider from "@/Tanstack/provider";
-import NavBar from "@/components/navbar/NavBar";
+import GlobalNavbar from "@/components/navbar/GlobalNavbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/footer";
+
+import { MeshBackground } from "@/app/DynamicMeshBackground";
+import GlopalFooter from "@/components/navbar/glopa-footer";
+import { Providers } from "@/lib/proviers/queryClient";
 
 
 
@@ -35,15 +39,18 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <TanstackProvider>
-          <ThemeProvider>
-            <NavBar />
-            <main className="flex-1">
+        <ThemeProvider>
+
+          <div className="relative flex min-h-screen flex-col">
+            <Providers>
+              <GlobalNavbar />
               {children}
-            </main>
-          </ThemeProvider>
-        </TanstackProvider>
+              <GlopalFooter />
+            </Providers>
+          </div>
+
+        </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }
