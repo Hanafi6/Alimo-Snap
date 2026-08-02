@@ -26,11 +26,7 @@ export const auth = betterAuth({
 
         emailOTP({
             async sendVerificationOTP({ email, otp, type }) {
-                // if (process.env.NODE_ENV !== "production") {
-                //     console.log(`[DEV-ONLY] OTP Code for ${email} (${type}): ${otp}`);
-                // }
-
-                void sendEmail({
+                await sendEmail({
                     to: email,
                     subject:
                         type === "forget-password" ? "Reset your password" : "OTP Code",

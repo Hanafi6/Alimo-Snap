@@ -108,23 +108,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         return;
       }
 
-      const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
-        email: data.email,
-        type: "email-verification",
-      });
-
-      if (otpError) {
-        console.error("Failed to send OTP:", otpError);
-        form.setError("root", {
-          message: "تم إنشاء الحساب ولكن فشل إرسال كود التأكيد، حاول إعادة الإرسال.",
-        });
-        return;
-      }
-
+      // ✅ التوجيه لصفحة الـ OTP مباشرة
       router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
 
     } catch (err) {
-      console.error(err);
+      console.error("Registration error:", err);
+      form.setError("root", { message: "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً." });
     }
   }
 
