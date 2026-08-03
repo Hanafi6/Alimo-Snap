@@ -35,7 +35,7 @@ export default async function SettingsPage() {
                     <BackToHomeBtn className="self-start sm:self-auto" />
                 </div>
 
-                <SettingsClient session={session} status={status} />
+                <SettingsClient session={session} />
             </div>
         </div>
     );
