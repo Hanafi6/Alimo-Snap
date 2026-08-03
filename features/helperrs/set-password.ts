@@ -12,7 +12,6 @@ export async function setPasswordAction(newPassword: string) {
         return { success: false, message: "الجلسة غير صالحة، سجل الدخول من تاني" };
     }
 
-    // مبنثقش في الـ status الجاي من الفرونت، بنتأكد من السيرفر
     const accounts = await auth.api.listUserAccounts({ headers: h });
     const hasPassword = accounts.some((a) => a.providerId === "credential");
 

@@ -108,7 +108,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         return;
       }
 
-      // ✅ التوجيه لصفحة الـ OTP مباشرة
+      await authClient.emailOtp.sendVerificationOtp({
+        email: data.email,
+        type: "email-verification", // أو "sign-in" حسب الـ schema عندك
+      });
+
       router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
 
     } catch (err) {

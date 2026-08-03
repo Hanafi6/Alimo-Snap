@@ -11,10 +11,9 @@ export default async function ResetPasswordPage({
     if (!token) {
         return (
             <div className="max-w-md mx-auto mt-20 text-center space-y-3">
-                <h2 className="text-lg font-semibold text-destructive">رابط غير صالح</h2>
+                <h2 className="text-lg font-semibold text-destructive">Invalid link</h2>
                 <p className="text-sm text-muted-foreground">
-                    الرابط منتهي أو غير صحيح، اطلب رابط جديد من صفحة نسيت كلمة السر.
-                </p>
+                    The link has expired or is invalid; request a new link from the "Forgot Password" page.                </p>
             </div>
         );
     }

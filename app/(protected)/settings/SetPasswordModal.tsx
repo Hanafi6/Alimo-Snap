@@ -58,6 +58,7 @@ export function SetPasswordModal({ open, onClose, onSuccess }: Props) {
             setTimeout(() => {
                 onClose();
                 onSuccess?.();
+
             }, 1200);
         }
     };

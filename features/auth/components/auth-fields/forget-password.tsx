@@ -49,7 +49,7 @@ function ForgetPassword({ className, ...props }: ForgetPasswordProps) {
         setIsSubmitting(false);
 
         if (error) {
-            setSubmitError(error.message || "حدث خطأ أثناء إرسال البريد الإلكتروني");
+            setSubmitError(error.message || "An error occurred while sending the email.");
             return;
         }
 
@@ -64,10 +64,9 @@ function ForgetPassword({ className, ...props }: ForgetPasswordProps) {
                 <Card>
                     <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                         <CheckCircle2 className="w-10 h-10 text-emerald-600" />
-                        <h2 className="text-lg font-semibold">تم إرسال رابط إعادة التعيين</h2>
+                        <h2 className="text-lg font-semibold">A reset link has been sent.</h2>
                         <p className="text-sm text-muted-foreground">
-                            افتح بريدك الإلكتروني واضغط على الرابط لتعيين كلمة سر جديدة.
-                        </p>
+                            Open your email and click the link to set a new password.                        </p>
                     </CardContent>
                 </Card>
             </div>
@@ -78,9 +77,9 @@ function ForgetPassword({ className, ...props }: ForgetPasswordProps) {
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>نسيت كلمة السر؟</CardTitle>
+                    <CardTitle>Forget Password?</CardTitle>
                     <CardDescription>
-                        أدخل بريدك الإلكتروني وهنبعتلك رابط إعادة تعيين كلمة السر
+                        Enter your email, and we’ll send you a password reset link.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -106,7 +105,7 @@ function ForgetPassword({ className, ...props }: ForgetPasswordProps) {
                                         disabled={isSubmitting}
                                         className="w-full"
                                     >
-                                        {isSubmitting ? "جاري الإرسال..." : "Send Reset Link"}
+                                        {isSubmitting ? "Singing..." : "Send Reset Link"}
                                     </Button>
 
                                     <FieldDescription className="text-center mt-2">

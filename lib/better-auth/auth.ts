@@ -8,7 +8,7 @@ import { ac, admin, agent, head, sales } from "./permissions";
 // import { resend } from "../resemd";
 
 import AuthEmail from "@/features/auth/components/email-templits";
-import { sendEmail } from "../nodemailer";
+import { sendEmail } from "./nodemailer";
 
 export const auth = betterAuth({
     baseURL: env.NEXT_PUBLIC_BETTER_AUTH_URL,
@@ -61,14 +61,13 @@ export const auth = betterAuth({
     user: {
         changeEmail: {
             enabled: true,
-            sendResetPassword: async ({ user, url }: { user: any; url: string }) => {
-                // 🚀 نفس الشكل بالظبط!
+            sendChangeEmailVerification: async ({ user, newEmail, url }: { user: any, newEmail: any, url: any }) => {
                 await sendEmail({
-                    to: user.email,
-                    subject: "إعادة تعيين كلمة المرور",
+                    to: newEmail, // 👈 الإرسال بيكون للإيميل الجديد للتأكد من ملكيته
+                    subject: "تأكيد تغيير البريد الإلكتروني",
                     react: AuthEmail({
                         url,
-                        type: "reset-password",
+                        type: "change-email",
                     }),
                 });
             },

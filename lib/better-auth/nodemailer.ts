@@ -1,16 +1,19 @@
 import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
 import { env } from "@/lib/env";
-
 import type { ReactElement } from "react";
 
-// 1. إعداد الاتصال بسيرفرات Gmail
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
         user: env.GMAIL_USER,
         pass: env.GMAIL_APP_PASSWORD,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 5000,
+    socketTimeout: 10000,
 });
 
 interface SendEmailParams {
@@ -33,7 +36,7 @@ export async function sendEmail({ to, subject, react }: SendEmailParams) {
         console.log("Email sent: %s", info.messageId);
         return { success: true };
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("Error sending email via Nodemailer:", error);
         return { success: false, error };
     }
 }

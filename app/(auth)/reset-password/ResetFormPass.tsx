@@ -28,7 +28,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
         setServerError(null);
 
         if (!otp) {
-            setServerError("برجاء إدخال رمز الـ OTP المرسل لبريدك");
+            setServerError("Please enter the OTP code sent to your email");
             return;
         }
 
@@ -37,17 +37,17 @@ export default function ResetPasswordForm({ token }: { token: string }) {
             token,
             fetchOptions: {
                 onSuccess: () => {
-                    alert("تم تغيير كلمة السر بنجاح!");
+                    alert("Password updated successfully!");
                     router.push("/login");
                 }
             },
-            // otp: otp, // 👈 بنبعت الـ OTP هنا
+            // otp: otp, // Pass the OTP code here if required by your backend plugin
         });
 
         if (error) {
-            setServerError(error.message || "حدث خطأ أثناء إعادة تعيين كلمة المرور");
+            setServerError(error.message || "An error occurred while resetting your password");
         } else {
-            alert("تم تغيير كلمة السر بنجاح!");
+            alert("Password updated successfully!");
             router.push("/login");
         }
     };
@@ -66,7 +66,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                     type="text"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="رمز الـ OTP المرسل لإيميلك"
+                    placeholder="Enter OTP sent to your email"
                     className="w-full px-4 py-2.5 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                 />
@@ -77,7 +77,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                 <input
                     {...register("password")}
                     type="password"
-                    placeholder="كلمة السر الجديدة"
+                    placeholder="New Password"
                     className="w-full px-4 py-2.5 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 />
                 {errors.password && (
@@ -90,7 +90,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                 <input
                     {...register("confirmPassword")}
                     type="password"
-                    placeholder="تأكيد كلمة السر الجديدة"
+                    placeholder="Confirm New Password"
                     className="w-full px-4 py-2.5 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 />
                 {errors.confirmPassword && (
@@ -105,7 +105,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                 disabled={isSubmitting}
                 className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
             >
-                {isSubmitting ? "جاري التحديث..." : "حفظ كلمة السر الجديدة"}
+                {isSubmitting ? "Updating..." : "Save New Password"}
             </button>
         </form>
     );
