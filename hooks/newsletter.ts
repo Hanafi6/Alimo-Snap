@@ -1,6 +1,6 @@
 "use server";
 
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/better-auth/nodemailer";
 import AuthEmail from "@/features/auth/components/email-templits";
 
 export async function subscribeToNewsletter(email: string) {
